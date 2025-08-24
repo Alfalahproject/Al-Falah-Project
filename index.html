@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আল-ফালাহ: আপনার রিয়েল এস্টেট স্ট্র্যাটেজিস্ট</title>
+    <!-- Tailwind CSS লোড করা হচ্ছে -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .prose ul, .prose ol {
+            padding-left: 1.5rem;
+        }
+        .prose ul li, .prose ol li {
+            margin-bottom: 0.5rem;
+        }
+        .active-tab {
+            @apply bg-green-600 text-white shadow-lg;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="container bg-white shadow-xl rounded-2xl p-6 md:p-10 space-y-6 transform transition-all duration-300">
 
+        <!-- Header Section -->
+        <header class="text-center space-y-2">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-green-700">আল-ফালাহ</h1>
+            <p class="text-gray-600 text-lg md:text-xl font-medium">আপনার ব্যক্তিগত রিয়েল এস্টেট স্ট্র্যাটেজিস্ট</p>
+        </header>
+
+        <!-- Tabbed Interface -->
+        <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <!-- Analysis Tab -->
+            <button id="analysisTab" class="flex-1 py-3 px-6 rounded-lg font-bold text-lg transition-colors duration-200 bg-gray-200 text-gray-800 active-tab">
+                বিশ্লেষণ
+            </button>
+            <!-- Matchmaking Tab -->
+            <button id="matchTab" class="flex-1 py-3 px-6 rounded-lg font-bold text-lg transition-colors duration-200 bg-gray-200 text-gray-800">
+                বিনিয়োগ খুঁজুন
+            </button>
+        </div>
+
+        <!-- Analysis Section (Initially Active) -->
+        <div id="analysisSection" class="tab-content bg-green-50 p-6 rounded-xl border border-green-200">
+            <p class="text-green-800 text-lg md:text-xl font-bold mb-2">আপনার প্রশ্ন লিখুন:</p>
+            <p class="text-gray-700 text-sm md:text-base">আপনি এখন যেকোনো প্রশ্ন করতে পারেন, যেমন: "DAP সংশোধন বাজারের উপর কী প্রভাব ফেলবে?"</p>
+            <textarea id="userInput" rows="3" class="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200 resize-none" placeholder="আপনার প্রশ্নটি লিখুন..."></textarea>
+            <button id="analyzeButton" class="w-full mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200">
+                বিশ্লেষণ করুন
+            </button>
+        </div>
+
+        <!-- Matchmaking Section (Initially Hidden) -->
+        <div id="matchmakingSection" class="tab-content hidden bg-blue-50 p-6 rounded-xl border border-blue-200">
+            <h2 class="text-blue-800 text-lg md:text-xl font-bold mb-4">আপনার জন্য আদর্শ সম্পত্তি খুঁজুন</h2>
+            <div class="space-y-4">
+                <div class="flex flex-col">
+                    <label for="investmentType" class="font-semibold text-gray-700 mb-1">আপনার লক্ষ্য কী?</label>
+                    <select id="investmentType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="rental">ভাড়া থেকে আয়</option>
+                        <option value="resale">পুনরায় বিক্রি থেকে লাভ</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label for="budget" class="font-semibold text-gray-700 mb-1">আপনার বাজেট (লাখ টাকায়)?</label>
+                    <input type="number" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="উদাহরণ: ৮০">
+                </div>
+                <button id="findMatchButton" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                খুঁজুন
+                </button>
+            </div>
+        </div>
+
+        <!-- Analysis Output Section -->
+        <div id="outputSection" class="bg-gray-50 p-6 rounded-xl border border-gray-200 hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">আল-ফালাহ'র বিশ্লেষণ:</h2>
+            <div id="aiResponse" class="prose text-gray-700 leading-relaxed space-y-4">
+                <!-- AI analysis will be inserted here -->
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // আপনার সংগৃহীত ডেটা, যা এখন আমাদের AI মডেলের জ্ঞান হিসেবে কাজ করবে।
+        // এটি সরাসরি এআই-এর কাছে পাঠানো হবে।
+        const researchData = {
+            hri: {
+                title: "BBS House Rent Index (HRI)",
+                details: [
+                    "Q2 FY24 (Oct–Dec 2023): ভাড়া গড় বৃদ্ধি 5.89%",
+                    "Q3 FY24 (July–Sep 2023): বৃদ্ধির হার 5.81%",
+                    "গত ৫ বছরে ঢাকায় গড় বৃদ্ধি 5.71%, যা সারাদেশের চেয়ে বেশি।"
+                ]
+            },
+            policy: {
+                title: "রিয়েল এস্টেট সংক্রান্ত নীতির পরিবর্তন",
+                details: [
+                    "রেজিস্ট্রেশন ট্যাক্স ~40% কমানো হয়েছে, যা লেনদেনকে উৎসাহিত করবে।",
+                    "FY26 বাজেট প্রস্তাবে অ্যাপার্টমেন্ট ক্রয়ে কর ৩–৫ গুণ বৃদ্ধি ও হাউজিং সার্ভিসে VAT 10%।",
+                    "DAP (FAR) সংশোধন নিয়ে নির্মাতারা ও পরিকল্পনাবিদদের মধ্যে বিতর্ক চলমান।"
+                ]
+            },
+            public_opinion: {
+                title: "সাধারণ মানুষের ভাবনা",
+                details: [
+                    "ভাড়া বাড়ায় নিম্ন-মধ্যবিত্ত পরিবারে বড় চাপ।",
+                    "DAP সংশোধন নিয়ে বিভাজন: নির্মাতারা সরবরাহ বাড়াতে চায়, পরিকল্পনাবিদরা লাইভেবিলিটি নিয়ে উদ্বিগ্ন।"
+                ]
+            },
+            challenges: {
+                title: "বিনিয়োগের প্রধান চ্যালেঞ্জ",
+                details: [
+                    "নির্মাণ খরচ ও কর বৃদ্ধি পণ্যের দাম বাড়াতে পারে।",
+                    "DAP নীতির চূড়ান্ত গেজেট না হওয়া পর্যন্ত প্রজেক্ট প্ল্যানিংয়ে ঝুঁকি।",
+                    "ব্যাংকিং অর্থায়ন কঠিন হওয়ায় ডেভেলপারদের ওপর চাপ।"
+                ]
+            }
+        };
+
+        // আদর্শ সম্পত্তির মিল খোঁজার জন্য নমুনাস্বরূপ ডেটা
+        const propertiesData = [
+            { id: 1, location: "মিরপুর", price: 80, rentalYield: 7.5, resaleGrowth: 9, description: "শিক্ষাপ্রতিষ্ঠান এবং হাসপাতালের কাছে অবস্থিত।" },
+            { id: 2, location: "উত্তরা", price: 120, rentalYield: 6.8, resaleGrowth: 11, description: "বিমানবন্দরের কাছে, নতুন ব্যবসায়িক কেন্দ্র।" },
+            { id: 3, location: "ধানমন্ডি", price: 250, rentalYield: 5.2, resaleGrowth: 15, description: "উচ্চ-মূল্যের আবাসিক এলাকা, ভবিষ্যতে ভালো রিটার্নের সম্ভাবনা।" },
+            { id: 4, location: "মোহাম্মদপুর", price: 95, rentalYield: 7.2, resaleGrowth: 8, description: "সুবিধাজনক স্থানে, মধ্যবিত্ত পরিবারের জন্য উপযুক্ত।" },
+            { id: 5, location: "গুলশান", price: 500, rentalYield: 4.5, resaleGrowth: 18, description: "লাক্সারি সেগমেন্ট, উচ্চ পুঁজি ও বড় লাভের সম্ভাবনা।" }
+        ];
+
+        // প্রয়োজনীয় DOM উপাদানগুলো নির্বাচন করা হচ্ছে।
+        const analysisTab = document.getElementById('analysisTab');
+        const matchTab = document.getElementById('matchTab');
+        const analysisSection = document.getElementById('analysisSection');
+        const matchmakingSection = document.getElementById('matchmakingSection');
+        const userInput = document.getElementById('userInput');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const outputSection = document.getElementById('outputSection');
+        const aiResponseDiv = document.getElementById('aiResponse');
+        const investmentType = document.getElementById('investmentType');
+        const budgetInput = document.getElementById('budget');
+        const findMatchButton = document.getElementById('findMatchButton');
+
+        // এই ফাংশনটি এআই মডেলের মাধ্যমে ডাইনামিক উত্তর তৈরি করবে।
+        async function getAIResponse(query) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            // এআইকে একটি সুনির্দিষ্ট প্রম্পট দেওয়া হচ্ছে, যাতে সে আপনার ডেটা ব্যবহার করে উত্তর দেয়।
+            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(researchData)}. এখন ব্যবহারকারীর প্রশ্ন: ${query}. এই ডেটা ব্যবহার করে একটি বিস্তারিত এবং প্রাসঙ্গিক উত্তর দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: fullPrompt }]
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
+                return text;
+            } catch (error) {
+                console.error("API Error:", error);
+                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+            }
+        }
+
+        // আদর্শ সম্পত্তির মিল খোঁজার ফাংশন, যা এখন AI ব্যবহার করবে।
+        async function findIdealMatch(type, budget) {
+             const apiKey = "";
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            
+            // এআইকে সুনির্দিষ্ট প্রম্পট দেওয়া হচ্ছে, যাতে সে সম্পত্তির ডেটা বিশ্লেষণ করে উত্তর দেয়।
+            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(propertiesData)}. ব্যবহারকারীর বাজেট ${budget} লাখ টাকা এবং লক্ষ্য ${type === 'rental' ? 'ভাড়া থেকে আয়' : 'পুনরায় বিক্রি থেকে লাভ'}। এই ডেটা ব্যবহার করে একটি বিস্তারিত বিশ্লেষণ এবং সেরা সম্পত্তিগুলোর একটি তালিকা দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: fullPrompt }]
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
+                return text;
+            } catch (error) {
+                console.error("API Error:", error);
+                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+            }
+        }
+
+        // ট্যাব পরিবর্তনের ফাংশন
+        function switchTab(tab) {
+            if (tab === 'analysis') {
+                analysisTab.classList.add('active-tab');
+                matchTab.classList.remove('active-tab');
+                analysisSection.classList.remove('hidden');
+                matchmakingSection.classList.add('hidden');
+                outputSection.classList.add('hidden');
+            } else {
+                analysisTab.classList.remove('active-tab');
+                matchTab.classList.add('active-tab');
+                analysisSection.classList.add('hidden');
+                matchmakingSection.classList.remove('hidden');
+                outputSection.classList.add('hidden');
+            }
+        }
+
+        // ইভেন্ট লিসেনার
+        analysisTab.addEventListener('click', () => switchTab('analysis'));
+        matchTab.addEventListener('click', () => switchTab('match'));
+
+        analyzeButton.addEventListener('click', async () => {
+            const userQuery = userInput.value;
+            if (userQuery.trim() === '') {
+                return;
+            }
+            outputSection.classList.remove('hidden');
+            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500">বিশ্লেষণ করা হচ্ছে...</p>`;
+            const aiResponse = await getAIResponse(userQuery);
+            aiResponseDiv.innerHTML = aiResponse;
+        });
+
+        findMatchButton.addEventListener('click', async () => {
+            const type = investmentType.value;
+            const budget = parseFloat(budgetInput.value);
+
+            if (isNaN(budget) || budget <= 0) {
+                 aiResponseDiv.innerHTML = `<p class="text-red-600">দয়া করে একটি সঠিক বাজেট লিখুন।</p>`;
+                 outputSection.classList.remove('hidden');
+                 return;
+            }
+
+            outputSection.classList.remove('hidden');
+            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500">আপনার জন্য আদর্শ সম্পত্তি খোঁজা হচ্ছে...</p>`;
+            const aiResponse = await findIdealMatch(type, budget);
+            aiResponseDiv.innerHTML = aiResponse;
+        });
+    </script>
+</body>
+</html>
