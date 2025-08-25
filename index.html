@@ -100,9 +100,9 @@
     </main>
 
     <script>
-        // এই ফাংশনটি এআই মডেলের মাধ্যমে ডাইনামিক উত্তর তৈরি করবে।
+        // এটি আমাদের চূড়ান্ত এবং সুরক্ষিত API কল পদ্ধতি।
+        // এতে কোনো ব্যক্তিগত কী ব্যবহার করা হয়নি, যা GitHub Pages-এর জন্য আদর্শ।
         async function getAIResponse(query) {
-            // এটি একটি সুরক্ষিত API কল পদ্ধতি, যা কোনো ব্যক্তিগত কী ব্যবহার করে না।
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`;
             
             const researchData = {
@@ -111,14 +111,6 @@
                 public_opinion: { title: "সাধারণ মানুষের ভাবনা", details: ["ভাড়া বাড়ায় নিম্ন-মধ্যবিত্ত পরিবারে বড় চাপ।", "DAP সংশোধন নিয়ে বিভাজন: নির্মাতারা সরবরাহ বাড়াতে চায়, পরিকল্পনাবিদরা লাইভেবিলিটি নিয়ে উদ্বিগ্ন।"] },
                 challenges: { title: "বিনিয়োগের প্রধান চ্যালেঞ্জ", details: ["নির্মাণ খরচ ও কর বৃদ্ধি পণ্যের দাম বাড়াতে পারে।", "DAP নীতির চূড়ান্ত গেজেট না হওয়া পর্যন্ত প্রজেক্ট প্ল্যানিংয়ে ঝুঁকি।", "ব্যাংকিং অর্থায়ন কঠিন হওয়ায় ডেভেলপারদের ওপর চাপ।"] }
             };
-
-            const propertiesData = [
-                { id: 1, location: "মিরপুর", price: 80, rentalYield: 7.5, resaleGrowth: 9, description: "শিক্ষাপ্রতিষ্ঠান এবং হাসপাতালের কাছে অবস্থিত।" },
-                { id: 2, location: "উত্তরা", price: 120, rentalYield: 6.8, resaleGrowth: 11, description: "বিমানবন্দরের কাছে, নতুন ব্যবসায়িক কেন্দ্র।" },
-                { id: 3, location: "ধানমন্ডি", price: 250, rentalYield: 5.2, resaleGrowth: 15, description: "উচ্চ-মূল্যের আবাসিক এলাকা, ভবিষ্যতে ভালো রিটার্নের সম্ভাবনা।" },
-                { id: 4, location: "মোহাম্মদপুর", price: 95, rentalYield: 7.2, resaleGrowth: 8, description: "সুবিধাজনক স্থানে, মধ্যবিত্ত পরিবারের জন্য উপযুক্ত।" },
-                { id: 5, location: "গুলশান", price: 500, rentalYield: 4.5, resaleGrowth: 18, description: "লাক্সারি সেগমেন্ট, উচ্চ পুঁজি ও বড় লাভের সম্ভাবনা।" }
-            ];
 
             const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(researchData)}. এখন ব্যবহারকারীর প্রশ্ন: ${query}. এই ডেটা ব্যবহার করে একটি বিস্তারিত এবং প্রাসঙ্গিক উত্তর দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
 
