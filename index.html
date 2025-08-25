@@ -23,6 +23,18 @@
         .active-tab {
             @apply bg-green-600 text-white shadow-lg;
         }
+        #loadingSpinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4ade80;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
@@ -88,52 +100,81 @@
     </main>
 
     <script>
-        // আপনার সংগৃহীত ডেটা, যা এখন আমাদের AI মডেলের জ্ঞান হিসেবে কাজ করবে।
-        // এটি সরাসরি এআই-এর কাছে পাঠানো হবে।
-        const researchData = {
-            hri: {
-                title: "BBS House Rent Index (HRI)",
-                details: [
-                    "Q2 FY24 (Oct–Dec 2023): ভাড়া গড় বৃদ্ধি 5.89%",
-                    "Q3 FY24 (July–Sep 2023): বৃদ্ধির হার 5.81%",
-                    "গত ৫ বছরে ঢাকায় গড় বৃদ্ধি 5.71%, যা সারাদেশের চেয়ে বেশি।"
-                ]
-            },
-            policy: {
-                title: "রিয়েল এস্টেট সংক্রান্ত নীতির পরিবর্তন",
-                details: [
-                    "রেজিস্ট্রেশন ট্যাক্স ~40% কমানো হয়েছে, যা লেনদেনকে উৎসাহিত করবে।",
-                    "FY26 বাজেট প্রস্তাবে অ্যাপার্টমেন্ট ক্রয়ে কর ৩–৫ গুণ বৃদ্ধি ও হাউজিং সার্ভিসে VAT 10%।",
-                    "DAP (FAR) সংশোধন নিয়ে নির্মাতারা ও পরিকল্পনাবিদদের মধ্যে বিতর্ক চলমান।"
-                ]
-            },
-            public_opinion: {
-                title: "সাধারণ মানুষের ভাবনা",
-                details: [
-                    "ভাড়া বাড়ায় নিম্ন-মধ্যবিত্ত পরিবারে বড় চাপ।",
-                    "DAP সংশোধন নিয়ে বিভাজন: নির্মাতারা সরবরাহ বাড়াতে চায়, পরিকল্পনাবিদরা লাইভেবিলিটি নিয়ে উদ্বিগ্ন।"
-                ]
-            },
-            challenges: {
-                title: "বিনিয়োগের প্রধান চ্যালেঞ্জ",
-                details: [
-                    "নির্মাণ খরচ ও কর বৃদ্ধি পণ্যের দাম বাড়াতে পারে।",
-                    "DAP নীতির চূড়ান্ত গেজেট না হওয়া পর্যন্ত প্রজেক্ট প্ল্যানিংয়ে ঝুঁকি।",
-                    "ব্যাংকিং অর্থায়ন কঠিন হওয়ায় ডেভেলপারদের ওপর চাপ।"
-                ]
+        // এই ফাংশনটি এআই মডেলের মাধ্যমে ডাইনামিক উত্তর তৈরি করবে।
+        async function getAIResponse(query) {
+            // এটি একটি সুরক্ষিত API কল পদ্ধতি, যা কোনো ব্যক্তিগত কী ব্যবহার করে না।
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`;
+            
+            const researchData = {
+                hri: { title: "BBS House Rent Index (HRI)", details: ["Q2 FY24 (Oct–Dec 2023): ভাড়া গড় বৃদ্ধি 5.89%", "Q3 FY24 (July–Sep 2023): বৃদ্ধির হার 5.81%", "গত ৫ বছরে ঢাকায় গড় বৃদ্ধি 5.71%, যা সারাদেশের চেয়ে বেশি।"] },
+                policy: { title: "রিয়েল এস্টেট সংক্রান্ত নীতির পরিবর্তন", details: ["রেজিস্ট্রেশন ট্যাক্স ~40% কমানো হয়েছে, যা লেনদেনকে উৎসাহিত করবে।", "FY26 বাজেট প্রস্তাবে অ্যাপার্টমেন্ট ক্রয়ে কর ৩–৫ গুণ বৃদ্ধি ও হাউজিং সার্ভিসে VAT 10%।", "DAP (FAR) সংশোধন নিয়ে নির্মাতারা ও পরিকল্পনাবিদদের মধ্যে বিতর্ক চলমান।"] },
+                public_opinion: { title: "সাধারণ মানুষের ভাবনা", details: ["ভাড়া বাড়ায় নিম্ন-মধ্যবিত্ত পরিবারে বড় চাপ।", "DAP সংশোধন নিয়ে বিভাজন: নির্মাতারা সরবরাহ বাড়াতে চায়, পরিকল্পনাবিদরা লাইভেবিলিটি নিয়ে উদ্বিগ্ন।"] },
+                challenges: { title: "বিনিয়োগের প্রধান চ্যালেঞ্জ", details: ["নির্মাণ খরচ ও কর বৃদ্ধি পণ্যের দাম বাড়াতে পারে।", "DAP নীতির চূড়ান্ত গেজেট না হওয়া পর্যন্ত প্রজেক্ট প্ল্যানিংয়ে ঝুঁকি।", "ব্যাংকিং অর্থায়ন কঠিন হওয়ায় ডেভেলপারদের ওপর চাপ।"] }
+            };
+
+            const propertiesData = [
+                { id: 1, location: "মিরপুর", price: 80, rentalYield: 7.5, resaleGrowth: 9, description: "শিক্ষাপ্রতিষ্ঠান এবং হাসপাতালের কাছে অবস্থিত।" },
+                { id: 2, location: "উত্তরা", price: 120, rentalYield: 6.8, resaleGrowth: 11, description: "বিমানবন্দরের কাছে, নতুন ব্যবসায়িক কেন্দ্র।" },
+                { id: 3, location: "ধানমন্ডি", price: 250, rentalYield: 5.2, resaleGrowth: 15, description: "উচ্চ-মূল্যের আবাসিক এলাকা, ভবিষ্যতে ভালো রিটার্নের সম্ভাবনা।" },
+                { id: 4, location: "মোহাম্মদপুর", price: 95, rentalYield: 7.2, resaleGrowth: 8, description: "সুবিধাজনক স্থানে, মধ্যবিত্ত পরিবারের জন্য উপযুক্ত।" },
+                { id: 5, location: "গুলশান", price: 500, rentalYield: 4.5, resaleGrowth: 18, description: "লাক্সারি সেগমেন্ট, উচ্চ পুঁজি ও বড় লাভের সম্ভাবনা।" }
+            ];
+
+            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(researchData)}. এখন ব্যবহারকারীর প্রশ্ন: ${query}. এই ডেটা ব্যবহার করে একটি বিস্তারিত এবং প্রাসঙ্গিক উত্তর দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
+
+            try {
+                const payload = {
+                    contents: [{
+                        parts: [{ text: fullPrompt }]
+                    }]
+                };
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
+                return text;
+            } catch (error) {
+                console.error("API Error:", error);
+                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
             }
-        };
+        }
 
-        // আদর্শ সম্পত্তির মিল খোঁজার জন্য নমুনাস্বরূপ ডেটা
-        const propertiesData = [
-            { id: 1, location: "মিরপুর", price: 80, rentalYield: 7.5, resaleGrowth: 9, description: "শিক্ষাপ্রতিষ্ঠান এবং হাসপাতালের কাছে অবস্থিত।" },
-            { id: 2, location: "উত্তরা", price: 120, rentalYield: 6.8, resaleGrowth: 11, description: "বিমানবন্দরের কাছে, নতুন ব্যবসায়িক কেন্দ্র।" },
-            { id: 3, location: "ধানমন্ডি", price: 250, rentalYield: 5.2, resaleGrowth: 15, description: "উচ্চ-মূল্যের আবাসিক এলাকা, ভবিষ্যতে ভালো রিটার্নের সম্ভাবনা।" },
-            { id: 4, location: "মোহাম্মদপুর", price: 95, rentalYield: 7.2, resaleGrowth: 8, description: "সুবিধাজনক স্থানে, মধ্যবিত্ত পরিবারের জন্য উপযুক্ত।" },
-            { id: 5, location: "গুলশান", price: 500, rentalYield: 4.5, resaleGrowth: 18, description: "লাক্সারি সেগমেন্ট, উচ্চ পুঁজি ও বড় লাভের সম্ভাবনা।" }
-        ];
+        async function findIdealMatch(type, budget) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`;
+            
+            const propertiesData = [
+                { id: 1, location: "মিরপুর", price: 80, rentalYield: 7.5, resaleGrowth: 9, description: "শিক্ষাপ্রতিষ্ঠান এবং হাসপাতালের কাছে অবস্থিত।" },
+                { id: 2, location: "উত্তরা", price: 120, rentalYield: 6.8, resaleGrowth: 11, description: "বিমানবন্দরের কাছে, নতুন ব্যবসায়িক কেন্দ্র।" },
+                { id: 3, location: "ধানমন্ডি", price: 250, rentalYield: 5.2, resaleGrowth: 15, description: "উচ্চ-মূল্যের আবাসিক এলাকা, ভবিষ্যতে ভালো রিটার্নের সম্ভাবনা।" },
+                { id: 4, location: "মোহাম্মদপুর", price: 95, rentalYield: 7.2, resaleGrowth: 8, description: "সুবিধাজনক স্থানে, মধ্যবিত্ত পরিবারের জন্য উপযুক্ত।" },
+                { id: 5, location: "গুলশান", price: 500, rentalYield: 4.5, resaleGrowth: 18, description: "লাক্সারি সেগমেন্ট, উচ্চ পুঁজি ও বড় লাভের সম্ভাবনা।" }
+            ];
 
-        // প্রয়োজনীয় DOM উপাদানগুলো নির্বাচন করা হচ্ছে।
+            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(propertiesData)}. ব্যবহারকারীর বাজেট ${budget} লাখ টাকা এবং লক্ষ্য ${type === 'rental' ? 'ভাড়া থেকে আয়' : 'পুনরায় বিক্রি থেকে লাভ'}। এই ডেটা ব্যবহার করে একটি বিস্তারিত বিশ্লেষণ এবং সেরা সম্পত্তিগুলোর একটি তালিকা দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
+
+            try {
+                const payload = {
+                    contents: [{
+                        parts: [{ text: fullPrompt }]
+                    }]
+                };
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
+                return text;
+            } catch (error) {
+                console.error("API Error:", error);
+                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+            }
+        }
+
         const analysisTab = document.getElementById('analysisTab');
         const matchTab = document.getElementById('matchTab');
         const analysisSection = document.getElementById('analysisSection');
@@ -146,63 +187,6 @@
         const budgetInput = document.getElementById('budget');
         const findMatchButton = document.getElementById('findMatchButton');
 
-        // এই ফাংশনটি এআই মডেলের মাধ্যমে ডাইনামিক উত্তর তৈরি করবে।
-        async function getAIResponse(query) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-            // এআইকে একটি সুনির্দিষ্ট প্রম্পট দেওয়া হচ্ছে, যাতে সে আপনার ডেটা ব্যবহার করে উত্তর দেয়।
-            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(researchData)}. এখন ব্যবহারকারীর প্রশ্ন: ${query}. এই ডেটা ব্যবহার করে একটি বিস্তারিত এবং প্রাসঙ্গিক উত্তর দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: fullPrompt }]
-                        }]
-                    })
-                });
-
-                const result = await response.json();
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
-                return text;
-            } catch (error) {
-                console.error("API Error:", error);
-                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
-            }
-        }
-
-        // আদর্শ সম্পত্তির মিল খোঁজার ফাংশন, যা এখন AI ব্যবহার করবে।
-        async function findIdealMatch(type, budget) {
-             const apiKey ="AIzaSyBJGi61CIj9ZiS9H-9UZ032hUwnX8kxsrw";
-             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            
-            // এআইকে সুনির্দিষ্ট প্রম্পট দেওয়া হচ্ছে, যাতে সে সম্পত্তির ডেটা বিশ্লেষণ করে উত্তর দেয়।
-            const fullPrompt = `আপনি বাংলাদেশের একজন রিয়েল এস্টেট বিশেষজ্ঞ। আপনার কাছে কিছু ডেটা আছে: ${JSON.stringify(propertiesData)}. ব্যবহারকারীর বাজেট ${budget} লাখ টাকা এবং লক্ষ্য ${type === 'rental' ? 'ভাড়া থেকে আয়' : 'পুনরায় বিক্রি থেকে লাভ'}। এই ডেটা ব্যবহার করে একটি বিস্তারিত বিশ্লেষণ এবং সেরা সম্পত্তিগুলোর একটি তালিকা দিন। উত্তরটি বাংলাতে এবং HTML ফরম্যাটে দিন।`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: fullPrompt }]
-                        }]
-                    })
-                });
-
-                const result = await response.json();
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
-                return text;
-            } catch (error) {
-                console.error("API Error:", error);
-                return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
-            }
-        }
-
-        // ট্যাব পরিবর্তনের ফাংশন
         function switchTab(tab) {
             if (tab === 'analysis') {
                 analysisTab.classList.add('active-tab');
@@ -219,7 +203,6 @@
             }
         }
 
-        // ইভেন্ট লিসেনার
         analysisTab.addEventListener('click', () => switchTab('analysis'));
         matchTab.addEventListener('click', () => switchTab('match'));
 
@@ -229,7 +212,7 @@
                 return;
             }
             outputSection.classList.remove('hidden');
-            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500">বিশ্লেষণ করা হচ্ছে...</p>`;
+            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500 flex items-center justify-center space-x-2"><span id="loadingSpinner"></span><span>বিশ্লেষণ করা হচ্ছে...</span></p>`;
             const aiResponse = await getAIResponse(userQuery);
             aiResponseDiv.innerHTML = aiResponse;
         });
@@ -245,12 +228,10 @@
             }
 
             outputSection.classList.remove('hidden');
-            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500">আপনার জন্য আদর্শ সম্পত্তি খোঁজা হচ্ছে...</p>`;
+            aiResponseDiv.innerHTML = `<p class="text-center text-gray-500 flex items-center justify-center space-x-2"><span id="loadingSpinner"></span><span>আপনার জন্য আদর্শ সম্পত্তি খোঁজা হচ্ছে...</span></p>`;
             const aiResponse = await findIdealMatch(type, budget);
             aiResponseDiv.innerHTML = aiResponse;
         });
     </script>
 </body>
 </html>
-
-
